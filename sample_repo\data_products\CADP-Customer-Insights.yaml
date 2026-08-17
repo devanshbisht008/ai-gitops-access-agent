@@ -1,0 +1,21 @@
+data_product: CADP-Customer-Insights
+owner: customer.insights@example.com
+permissions:
+- consumer: DS-Digital-AB-Testing-Evaluation
+  source_environment: prod
+  target_environment: prod
+  access_type: prod_to_prod
+  access_scope: table
+  status: active
+- consumer: DS-TDA-Governance
+  source_environment: dev
+  target_environment: stage
+  access_type: dev_to_stage
+  access_scope: table
+  status: pending_pr
+- consumer: DS-TDA-Governance
+  source_environment: prod
+  target_environment: prod
+  access_type: prod_to_prod
+  access_scope: schema
+  status: pending_pr
