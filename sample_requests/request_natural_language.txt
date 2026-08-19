@@ -1,0 +1,9 @@
+Access Request Details:
+Request ID: REQ-1004
+Consumer: DS_TDA_Governance_LH
+Provider: DS_Digital_AB_Testing_Evaluation_LH
+Source Environment: dev
+Target Environment: prod
+Access Scope: schema
+Requested By: sample.user@example.com
+Business Justification: Need dev to prod access for governance validation and cross-product data audit.
