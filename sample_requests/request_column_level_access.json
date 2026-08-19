@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-2002",
+  "consumer": "CADP_Customer_Insights_LH",
+  "provider": "DS_TDA_Governance_LH",
+  "source_environment": "stage",
+  "target_environment": "stage",
+  "access_scope": "column",
+  "requested_by": "governance.lead@company.com",
+  "business_justification": "Column-level data lineage and compliance audit tracking in staging environment."
+}
