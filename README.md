@@ -309,12 +309,14 @@ To move from this POC to a production enterprise deployment:
 
 ## 13. Running the Streamlit Web Dashboard
 
-The application includes an interactive Streamlit Web UI for reviewing open PRs, 1-click approvals, and live deployment tracking:
+The application includes an interactive Streamlit Web UI for submitting access requests via guided form, enforcing mandatory PR review verification checklists, and live deployment tracking:
 
 ```cmd
 streamlit run src/dashboard.py
 ```
 
-* **Interactive PR Approval:** Inspect rich Markdown summaries (environment flow badges `PROD ➔ DEV`, YAML diffs, and business justifications) and approve/reject PRs with one click.
+* **Interactive Request Submission & Form Input:** Submit requests using guided form fields, natural language text, or raw JSON, with single-click demo presets (`🎯 Valid Request`, `⚠️ Existing Access`, `❌ Invalid Naming`, `🚫 Prod to Dev Violation`).
+* **Mandatory PR Review & Checklist Gating:** Inspect rich Markdown summaries (environment flow badges `PROD ➔ DEV`, YAML diffs, and business justifications). PR merging is strictly locked until all 3 mandatory verification checkboxes (Product Owner Approval, Governance Review, YAML Diff Inspection) are checked by the reviewer.
 * **Live Deployment Tracker:** Track active Jenkins CI/CD pipeline stage progress in real time.
+
 
