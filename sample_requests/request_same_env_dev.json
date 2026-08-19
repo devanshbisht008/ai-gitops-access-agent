@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-8002",
+  "consumer": "CADP_Customer_Insights_LH",
+  "provider": "DS_TDA_Governance_LH",
+  "source_environment": "dev",
+  "target_environment": "dev",
+  "access_scope": "volume",
+  "requested_by": "insights.dev@company.com",
+  "business_justification": "Development testing for customer insights feature integration."
+}
