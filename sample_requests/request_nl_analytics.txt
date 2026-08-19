@@ -1,0 +1,10 @@
+Access Provisioning Request
+
+Request ID: REQ-8003
+Requested By: alex.analytics@company.com
+Data Consumer: DS_Digital_AB_Testing_Evaluation_LH
+Data Provider: CADP_Customer_Insights_LH
+Source Environment: prod
+Target Environment: stage
+Access Scope: schema
+Business Justification: Executive dashboard cross-environment reporting and model verification.
