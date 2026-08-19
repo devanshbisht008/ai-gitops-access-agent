@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-2003",
+  "consumer": "DS_TDA_Governance_LH",
+  "provider": "CADP_Customer_Insights_LH",
+  "source_environment": "invalid_env",
+  "target_environment": "prod",
+  "access_scope": "table",
+  "requested_by": "test.user@company.com",
+  "business_justification": "Testing invalid environment validation policy error handling"
+}
