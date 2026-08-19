@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-7001",
+  "consumer": "CADP_Customer_Insights_LH",
+  "provider": "DS_Digital_AB_Testing_Evaluation_LH",
+  "source_environment": "prod",
+  "target_environment": "dev",
+  "access_scope": "table",
+  "requested_by": "data.analyst@example.com",
+  "business_justification": "Cross-environment analytics request for marketing insights model."
+}
