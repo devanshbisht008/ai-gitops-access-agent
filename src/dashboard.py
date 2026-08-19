@@ -88,8 +88,19 @@ if "simulated_prs" not in st.session_state:
         }
     ]
 
+# --- Helper to clean PR body markdown ---
+def clean_pr_body(body: str) -> str:
+    """Strips static checklist sections from PR markdown body so interactive Streamlit checkboxes are used exclusively."""
+    if not body:
+        return ""
+    for header in ["### ⚠️ Mandatory Human-in-the-Loop Approval Checklist", "### 📋 Mandatory Human-in-the-Loop Approval Checklist"]:
+        if header in body:
+            body = body.split(header)[0]
+    return body.strip()
+
 # Header
 st.title("⚙️ AI-GitOps Access Provisioning Dashboard")
+
 
 # Sidebar Configuration & Status
 with st.sidebar:
@@ -343,9 +354,7 @@ with tab1:
                     if "Pull request" in report.action_taken and report.action_taken["Pull request"].startswith("http"):
                         st.markdown(f"[👉 Click here to review PR on GitHub]({report.action_taken['Pull request']})")
 
-                    st.markdown("#### 📋 Human-in-the-Loop Safeguards Required")
-                    for step in report.manual_steps:
-                        st.markdown(f"- [ ] {step}")
+                    st.info("ℹ️ Human-in-the-Loop review and interactive checklist verification is active in Tab 2 ('Pending Operational Reviews').")
 
                 # Terminal Summary Output block
                 with st.expander("📄 View Full Agent Terminal Report Output"):
@@ -382,7 +391,7 @@ with tab2:
                         
                         st.divider()
                         if pr.body:
-                            st.markdown(pr.body)
+                            st.markdown(clean_pr_body(pr.body))
                         else:
                             st.write("*(No PR body description provided)*")
                         
@@ -452,7 +461,8 @@ with tab2:
                     st.markdown(f"**Requester/Author:** `{pr['user']}` | **Branch:** `{pr['branch']}` | **Created At:** `{pr['created_at']}`")
                     
                     st.divider()
-                    st.markdown(pr['body'])
+                    st.markdown(clean_pr_body(pr['body']))
+
                     
                     st.divider()
                     st.markdown("#### ⚠️ Mandatory Verification & Checklist Enforcement")
