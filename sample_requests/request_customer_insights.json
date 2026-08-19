@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-2001",
+  "consumer": "DS_Digital_AB_Testing_Evaluation_LH",
+  "provider": "CADP_Customer_Insights_LH",
+  "source_environment": "dev",
+  "target_environment": "prod",
+  "access_scope": "schema",
+  "requested_by": "analytics.engineer@company.com",
+  "business_justification": "Integration of customer segmentation insights with AB testing experimentation evaluation pipeline."
+}
