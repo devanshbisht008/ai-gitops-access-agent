@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-2001",
+  "consumer": "DS_TDA_Governance_LH",
+  "provider": "CADP_Customer_Insights_LH",
+  "source_environment": "dev",
+  "target_environment": "stage",
+  "access_scope": "table",
+  "requested_by": "sample.user@example.com",
+  "business_justification": "Live GitHub mode integration test"
+}
