@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-1001",
+  "consumer": "DS_TDA_Governance_LH",
+  "provider": "DS_Digital_AB_Testing_Evaluation_LH",
+  "source_environment": "dev",
+  "target_environment": "prod",
+  "access_scope": "schema",
+  "requested_by": "sample.user@example.com",
+  "business_justification": "Need dev to prod access for governance validation"
+}
