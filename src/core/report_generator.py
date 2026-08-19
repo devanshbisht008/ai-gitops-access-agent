@@ -147,17 +147,11 @@ class ReportGenerator:
                 "",
             ])
 
-        # Manual Steps / Approval Checklist
         lines.extend([
             "---",
-            "### ⚠️ Mandatory Human-in-the-Loop Approval Checklist",
-            f"- [ ] **Data Product Owner Approval:** Confirmed approval from `{owner_email}`",
-            "- [ ] **Governance Review:** Verified compliance with enterprise data sharing rules",
-            "- [ ] **Pull Request Review:** Code changes inspected and approved by authorized reviewer",
-            "- [ ] **Merge Execution:** Manual merge triggered to trigger provisioning pipelines",
-            "",
             "*Automated by AI-assisted GitOps Access Provisioning Agent*",
         ])
 
         return "\n".join(lines)
+
 
