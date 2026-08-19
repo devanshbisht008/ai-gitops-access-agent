@@ -1,0 +1,21 @@
+app_name: "AI-assisted GitOps Access Provisioning Agent"
+version: "1.0.0"
+default_mode: "local"
+
+allowed_prefixes:
+  - "DS-"
+  - "CADP-"
+
+allowed_environments:
+  - "dev"
+  - "qa"
+  - "stage"
+  - "prod"
+
+allowed_scopes:
+  - "schema"
+  - "table"
+  - "volume"
+
+github:
+  base_branch: "main"
