@@ -165,8 +165,6 @@ with tab1:
         st.session_state.form_user = "sample.user@example.com"
     if "form_justification" not in st.session_state:
         st.session_state.form_justification = "Need dev to prod access for governance validation"
-    if "nl_text_val" not in st.session_state:
-        st.session_state.nl_text_val = "Request ID: REQ-1005. User jane.doe@example.com needs schema access from consumer DS_TDA_Governance_LH to provider DS_Digital_AB_Testing_Evaluation_LH for dev to prod environment."
 
     with col_p1:
         if st.button("🎯 Valid Request", use_container_width=True):
@@ -220,7 +218,7 @@ with tab1:
 
     input_method = st.radio(
         "Select Input Method",
-        options=["Structured Form", "Natural Language / Freeform Text", "Raw JSON Input"],
+        options=["Structured Form", "Raw JSON Input"],
         horizontal=True
     )
 
@@ -258,13 +256,6 @@ with tab1:
                 }
                 request_payload = json.dumps(request_dict)
 
-    elif input_method == "Natural Language / Freeform Text":
-        with st.form("nl_request_form"):
-            nl_text = st.text_area("Natural Language Request Text", value=st.session_state.nl_text_val, height=120)
-            submitted_nl = st.form_submit_button("🚀 Parse & Process Request", type="primary", use_container_width=True)
-            if submitted_nl:
-                request_payload = nl_text
-
     elif input_method == "Raw JSON Input":
         default_json = json.dumps({
             "request_id": "REQ-1001",
@@ -281,6 +272,7 @@ with tab1:
             submitted_json = st.form_submit_button("🚀 Process JSON Request", type="primary", use_container_width=True)
             if submitted_json:
                 request_payload = raw_json
+
 
     # Processing and Validation Display
     if request_payload:
