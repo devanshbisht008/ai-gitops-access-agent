@@ -179,6 +179,30 @@ with tab1:
             st.rerun()
 
     with col_p2:
+        if st.button("💡 Customer Insights", use_container_width=True):
+            st.session_state.form_req_id = "REQ-2001"
+            st.session_state.form_consumer = "DS_Digital_AB_Testing_Evaluation_LH"
+            st.session_state.form_provider = "CADP_Customer_Insights_LH"
+            st.session_state.form_source_env = "dev"
+            st.session_state.form_target_env = "prod"
+            st.session_state.form_scope = "schema"
+            st.session_state.form_user = "analytics.engineer@company.com"
+            st.session_state.form_justification = "Integration of customer segmentation insights with AB testing experimentation evaluation pipeline."
+            st.rerun()
+
+    with col_p3:
+        if st.button("🔍 Column-Level Scope", use_container_width=True):
+            st.session_state.form_req_id = "REQ-2002"
+            st.session_state.form_consumer = "CADP_Customer_Insights_LH"
+            st.session_state.form_provider = "DS_TDA_Governance_LH"
+            st.session_state.form_source_env = "stage"
+            st.session_state.form_target_env = "stage"
+            st.session_state.form_scope = "column"
+            st.session_state.form_user = "governance.lead@company.com"
+            st.session_state.form_justification = "Column-level data lineage and compliance audit tracking in staging environment."
+            st.rerun()
+
+    with col_p4:
         if st.button("⚠️ Existing Access", use_container_width=True):
             st.session_state.form_req_id = "REQ-1002"
             st.session_state.form_consumer = "DS_TDA_Governance_LH"
@@ -190,7 +214,8 @@ with tab1:
             st.session_state.form_justification = "Testing existing access detection"
             st.rerun()
 
-    with col_p3:
+    col_p5, col_p6, col_p7, col_p8 = st.columns(4)
+    with col_p5:
         if st.button("❌ Invalid Naming", use_container_width=True):
             st.session_state.form_req_id = "REQ-1003"
             st.session_state.form_consumer = "INVALID_Product_Name_LH"
@@ -202,7 +227,7 @@ with tab1:
             st.session_state.form_justification = "Testing naming convention validation error"
             st.rerun()
 
-    with col_p4:
+    with col_p6:
         if st.button("🚫 Prod to Dev Violation", use_container_width=True):
             st.session_state.form_req_id = "REQ-1004"
             st.session_state.form_consumer = "DS_TDA_Governance_LH"
