@@ -3,7 +3,7 @@
 > A hybrid agentic AI & deterministic Python automation Proof of Concept (POC) for cross-data product access requests via declarative GitOps workflows.
 
 ---
-
+ 
 ## 1. Problem Statement
 In modern enterprise data platforms, cross data product access requests (e.g. connecting a governance consumer to a marketing analytics data product across environments) are often processed manually. Engineers must parse ticketing requests, validate naming conventions, inspect GitHub YAML configuration repositories for pre-existing access, manually edit configuration files, create feature branches, and submit Pull Requests. This manual approach is error-prone, introduces security oversight risks, and creates provisioning bottlenecks.
 
@@ -304,3 +304,17 @@ To move from this POC to a production enterprise deployment:
 - **Jira & Aspen Integration**: Replace the CLI file reader in `IntakeAgent` with a FastAPI webhook handler listening for `jira:issue_created` events.
 - **SharePoint Lookup**: Extend `OwnerLookup` to query the Microsoft Graph API (`GET /v1.0/sites/{site-id}/lists/{list-id}/items`) when owner mapping is not found locally.
 - **Jenkins Pipeline Trigger**: Configure GitHub repository webhooks to send a payload to `https://jenkins.company.com/generic-webhook-trigger/invoke` upon PR merge to `main`, triggering automated Databricks SQL grant execution.
+
+---
+
+## 13. Running the Streamlit Web Dashboard
+
+The application includes an interactive Streamlit Web UI for reviewing open PRs, 1-click approvals, and live deployment tracking:
+
+```cmd
+streamlit run src/dashboard.py
+```
+
+* **Interactive PR Approval:** Inspect rich Markdown summaries (environment flow badges `PROD ➔ DEV`, YAML diffs, and business justifications) and approve/reject PRs with one click.
+* **Live Deployment Tracker:** Track active Jenkins CI/CD pipeline stage progress in real time.
+
