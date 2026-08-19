@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-3001",
+  "consumer": "DS_TDA_Governance_LH",
+  "provider": "CADP_Customer_Insights_LH",
+  "source_environment": "prod",
+  "target_environment": "prod",
+  "access_scope": "schema",
+  "requested_by": "sample.user@example.com",
+  "business_justification": "Live GitHub integration test with updated permissions"
+}
