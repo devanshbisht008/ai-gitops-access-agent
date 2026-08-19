@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-1003",
+  "consumer": "INVALID_Product_LH",
+  "provider": "DS_Digital_AB_Testing_Evaluation_LH",
+  "source_environment": "dev",
+  "target_environment": "prod",
+  "access_scope": "schema",
+  "requested_by": "sample.user@example.com",
+  "business_justification": "Invalid consumer prefix test"
+}
