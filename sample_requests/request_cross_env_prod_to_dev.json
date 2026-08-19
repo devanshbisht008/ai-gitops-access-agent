@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-8001",
+  "consumer": "DS_TDA_Governance_LH",
+  "provider": "DS_Digital_AB_Testing_Evaluation_LH",
+  "source_environment": "prod",
+  "target_environment": "dev",
+  "access_scope": "table",
+  "requested_by": "audit.team@company.com",
+  "business_justification": "Requesting production governance data access in development environment for data quality audit."
+}
