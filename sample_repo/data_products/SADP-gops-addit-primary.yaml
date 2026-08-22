@@ -1,0 +1,10 @@
+data_product: SADP-gops-addit-primary
+owner: owner.sadp.gops.addit.primary@example.com
+permissions:
+- consumer: SADP-Sales-Analytics
+  source_environment: dev
+  target_environment: dev
+  access_type: dev_to_dev
+  access_scope: schema
+  full_schema_access: true
+  status: pending_pr
