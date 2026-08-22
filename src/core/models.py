@@ -14,6 +14,8 @@ class AccessRequest:
     request_id: str = "REQ-1000"
     requested_by: str = "system.user@example.com"
     business_justification: str = "Access request"
+    tables: List[str] = field(default_factory=list)
+    is_ml_use_case: bool = False
 
 @dataclass
 class NormalizedRequest:
@@ -27,6 +29,8 @@ class NormalizedRequest:
     access_scope: str
     requested_by: str
     business_justification: str
+    tables: List[str] = field(default_factory=list)
+    is_ml_use_case: bool = False
 
     def to_dict(self) -> Dict[str, Any]:
         """Converts normalized request to a dictionary."""
@@ -40,6 +44,8 @@ class NormalizedRequest:
             "access_scope": self.access_scope,
             "requested_by": self.requested_by,
             "business_justification": self.business_justification,
+            "tables": self.tables,
+            "is_ml_use_case": self.is_ml_use_case,
         }
 
 @dataclass
