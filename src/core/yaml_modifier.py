@@ -38,15 +38,31 @@ class YAMLModifier:
         if "permissions" not in yaml_data or not isinstance(yaml_data["permissions"], list):
             yaml_data["permissions"] = []
 
-        # Check for duplicates before appending
+        # Table availability verification if catalog defined in provider YAML
+        if request.access_scope == "table" and request.tables:
+            available_tables = yaml_data.get("available_tables", [])
+            if available_tables and isinstance(available_tables, list):
+                missing = [t for t in request.tables if t not in available_tables]
+                if missing:
+                    return False, yaml_path, (
+                        f"Table verification failed: Mentioned table(s) {missing} are not present "
+                        f"in the lakehouse catalog for '{request.provider}'. Changes cannot be started "
+                        "until the tables are created."
+                    )
+
+        # Build new permission object with enterprise keywords
+        is_full_schema = (request.access_scope == "schema")
         new_perm = {
             "consumer": request.consumer,
             "source_environment": request.source_environment,
             "target_environment": request.target_environment,
             "access_type": request.access_type,
             "access_scope": request.access_scope,
+            "full_schema_access": is_full_schema,
             "status": "pending_pr"
         }
+        if not is_full_schema and request.tables:
+            new_perm["tables"] = request.tables
 
         for perm in yaml_data["permissions"]:
             if (
