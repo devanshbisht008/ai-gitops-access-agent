@@ -81,7 +81,7 @@ def test_yaml_diff_snippet_inclusion(sample_valid_report):
     )
     assert "```yaml" in summary
     assert "+   - consumer: DS-Digital-AB-Testing-Evaluation" in summary
-    assert "+     environment: dev" in summary
+    assert "+     target_environment: dev" in summary
     assert "+     status: pending_pr" in summary
 
 def test_summary_agent_integration(sample_valid_report):
