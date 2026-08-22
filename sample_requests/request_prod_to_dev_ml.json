@@ -1,0 +1,12 @@
+{
+  "request_id": "REQ-XENV-4002",
+  "consumer": "CADP-Customer-Insights",
+  "provider": "CADP-Customer-Insights",
+  "source_environment": "prod",
+  "target_environment": "dev",
+  "access_scope": "table",
+  "tables": ["customer_profiles"],
+  "requested_by": "ml.engineer@example.com",
+  "business_justification": "ML model training feature extraction for customer retention ML use case",
+  "is_ml_use_case": true
+}
