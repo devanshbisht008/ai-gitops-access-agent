@@ -1,0 +1,9 @@
+data_product: DS-TDA-Governance
+owner: tda.governance@example.com
+permissions:
+- consumer: CADP-Customer-Insights
+  source_environment: dev
+  target_environment: dev
+  access_type: dev_to_dev
+  access_scope: volume
+  status: pending_pr
