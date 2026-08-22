@@ -19,3 +19,12 @@ permissions:
   access_type: prod_to_prod
   access_scope: schema
   status: pending_pr
+- consumer: CADP-Customer-Insights
+  source_environment: prod
+  target_environment: dev
+  access_type: prod_to_dev
+  access_scope: table
+  full_schema_access: false
+  status: pending_pr
+  tables:
+  - customer_profiles
