@@ -42,6 +42,14 @@ class IntakeAgent:
 
     def _parse_dict(self, data: Dict[str, Any]) -> AccessRequest:
         """Constructs AccessRequest from dictionary data."""
+        raw_tables = data.get("tables", [])
+        if isinstance(raw_tables, str):
+            tables = [t.strip() for t in raw_tables.split(",") if t.strip()]
+        elif isinstance(raw_tables, list):
+            tables = [str(t).strip() for t in raw_tables if str(t).strip()]
+        else:
+            tables = []
+
         return AccessRequest(
             request_id=data.get("request_id", "REQ-1000"),
             consumer=data.get("consumer", ""),
@@ -51,6 +59,8 @@ class IntakeAgent:
             access_scope=data.get("access_scope", ""),
             requested_by=data.get("requested_by", "sample.user@example.com"),
             business_justification=data.get("business_justification", "Access Request"),
+            tables=tables,
+            is_ml_use_case=bool(data.get("is_ml_use_case", False))
         )
 
     def _parse_natural_language(self, text: str) -> AccessRequest:
@@ -59,13 +69,15 @@ class IntakeAgent:
         Enables rule-based extraction without requiring external LLM API calls.
         """
         request_id_match = re.search(r'(?:Request ID|REQ ID):\s*([A-Za-z0-9_-]+)', text, re.IGNORECASE)
-        consumer_match = re.search(r'(?:Consumer|consumer DS_[A-Za-z0-9_]+|consumer CADP_[A-Za-z0-9_]+):\s*([A-Za-z0-9_-]+)|consumer\s+([A-Za-z0-9_-]+)', text, re.IGNORECASE)
-        provider_match = re.search(r'(?:Provider|provider DS_[A-Za-z0-9_]+|provider CADP_[A-Za-z0-9_]+):\s*([A-Za-z0-9_-]+)|provider\s+([A-Za-z0-9_-]+)', text, re.IGNORECASE)
+        consumer_match = re.search(r'(?:Consumer|consumer DS_[A-Za-z0-9_]+|consumer CADP_[A-Za-z0-9_]+|consumer SADP_[A-Za-z0-9_]+):\s*([A-Za-z0-9_-]+)|consumer\s+([A-Za-z0-9_-]+)', text, re.IGNORECASE)
+        provider_match = re.search(r'(?:Provider|provider DS_[A-Za-z0-9_]+|provider CADP_[A-Za-z0-9_]+|provider SADP_[A-Za-z0-9_]+):\s*([A-Za-z0-9_-]+)|provider\s+([A-Za-z0-9_-]+)', text, re.IGNORECASE)
         source_env_match = re.search(r'(?:Source Environment|source_env|source):\s*([A-Za-z0-9_-]+)', text, re.IGNORECASE)
         target_env_match = re.search(r'(?:Target Environment|target_env|target):\s*([A-Za-z0-9_-]+)', text, re.IGNORECASE)
         scope_match = re.search(r'(?:Access Scope|scope):\s*([A-Za-z0-9_-]+)', text, re.IGNORECASE)
+        tables_match = re.search(r'(?:Tables|Table|table_names):\s*([A-Za-z0-9_,\s-]+)', text, re.IGNORECASE)
         requested_by_match = re.search(r'(?:Requested By|user|email):\s*(\S+@\S+)', text, re.IGNORECASE)
         justification_match = re.search(r'(?:Business Justification|justification):\s*(.*)', text, re.IGNORECASE)
+        ml_match = re.search(r'(?:is_ml_use_case|ml_use_case):\s*(true|yes|1)', text, re.IGNORECASE)
 
         # Helper to pick matched group
         def extract_group(match):
@@ -80,8 +92,11 @@ class IntakeAgent:
         source_env = extract_group(source_env_match)
         target_env = extract_group(target_env_match)
         scope = extract_group(scope_match)
+        tables_str = extract_group(tables_match)
+        tables = [t.strip() for t in tables_str.split(",") if t.strip()] if tables_str else []
         requested_by = extract_group(requested_by_match) or "sample.user@example.com"
         justification = extract_group(justification_match) or "Natural language access request"
+        is_ml = bool(ml_match) or bool(re.search(r'\b(ml|machine\s*learning)\b', text, re.IGNORECASE))
 
         return AccessRequest(
             request_id=request_id,
@@ -92,4 +107,6 @@ class IntakeAgent:
             access_scope=scope,
             requested_by=requested_by,
             business_justification=justification,
+            tables=tables,
+            is_ml_use_case=is_ml
         )
