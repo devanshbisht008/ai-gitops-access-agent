@@ -9,7 +9,7 @@ def clean_data_product_name(name: str) -> str:
     Cleans and normalizes data product names:
     - Removes trailing '-LH' or '_LH'
     - Replaces underscores with hyphens
-    - Capitalizes prefixes (DS-, CADP-)
+    - Capitalizes prefixes (DS-, CADP-, SADP-)
     """
     if not name:
         return ""
@@ -25,6 +25,8 @@ def clean_data_product_name(name: str) -> str:
         cleaned = "DS-" + cleaned[3:]
     elif cleaned.lower().startswith("cadp-"):
         cleaned = "CADP-" + cleaned[5:]
+    elif cleaned.lower().startswith("sadp-"):
+        cleaned = "SADP-" + cleaned[5:]
         
     return cleaned
 
@@ -43,6 +45,13 @@ class RequestNormalizer:
         
         access_type = f"{source_env}_to_{target_env}"
         
+        # Clean tables list
+        tables = [t.strip() for t in request.tables if t and t.strip()] if request.tables else []
+        
+        # ML use case detection from flag or justification
+        justification = request.business_justification.strip() if request.business_justification else ""
+        is_ml = request.is_ml_use_case or bool(re.search(r'\b(ml|machine\s*learning|model|llm)\b', justification, re.IGNORECASE))
+        
         return NormalizedRequest(
             request_id=request.request_id.strip() if request.request_id else "REQ-1000",
             consumer=cleaned_consumer,
@@ -52,5 +61,7 @@ class RequestNormalizer:
             access_type=access_type,
             access_scope=access_scope,
             requested_by=request.requested_by.strip() if request.requested_by else "unknown@example.com",
-            business_justification=request.business_justification.strip() if request.business_justification else ""
+            business_justification=justification,
+            tables=tables,
+            is_ml_use_case=is_ml
         )
