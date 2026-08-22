@@ -133,19 +133,26 @@ class ReportGenerator:
         # Diff / Changes made section
         if report.action_taken and "Feature branch created" in report.action_taken:
             rel_file = file_path if file_path else f"data_products/{norm.provider}.yaml"
-            lines.extend([
+            is_full = (norm.access_scope == "schema")
+            diff_lines = [
                 "### 📝 Changes Applied (YAML Diff)",
                 f"**Updated File:** `{rel_file}`",
                 "```yaml",
                 f"+   - consumer: {norm.consumer}",
-                f"+     environment: {norm.target_environment}",
+                f"+     source_environment: {norm.source_environment}",
+                f"+     target_environment: {norm.target_environment}",
                 f"+     access_type: {norm.access_type}",
                 f"+     access_scope: {norm.access_scope}",
+                f"+     full_schema_access: {'true' if is_full else 'false'}",
+            ]
+            if not is_full and norm.tables:
+                diff_lines.append(f"+     tables: {norm.tables}")
+            diff_lines.extend([
                 "+     status: pending_pr",
-                f"+     requested_by: {norm.requested_by}",
                 "```",
                 "",
             ])
+            lines.extend(diff_lines)
 
         lines.extend([
             "---",
