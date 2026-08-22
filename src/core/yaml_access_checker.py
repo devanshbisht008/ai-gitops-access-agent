@@ -44,18 +44,34 @@ class YAMLAccessChecker:
             if not isinstance(perm, dict):
                 continue
             
-            # Match consumer, source_env, target_env, access_scope
+            # Match consumer, source_env, target_env
             match_consumer = (perm.get("consumer") == request.consumer)
             match_source = (perm.get("source_environment") == request.source_environment)
             match_target = (perm.get("target_environment") == request.target_environment)
-            match_scope = (perm.get("access_scope") == request.access_scope)
 
-            if match_consumer and match_source and match_target and match_scope:
+            if not (match_consumer and match_source and match_target):
+                continue
+
+            # Case A: If permission has full_schema_access or scope 'schema', it satisfies any scope
+            perm_scope = perm.get("access_scope", "")
+            perm_full = perm.get("full_schema_access", perm_scope == "schema")
+
+            if perm_full or perm_scope == "schema":
                 return AccessCheckResult(
                     access_exists=True,
                     matching_permission=perm,
-                    message=f"Access already exists for {request.consumer} in {request.provider}.yaml (status: {perm.get('status', 'active')})"
+                    message=f"Access already exists for {request.consumer} in {request.provider}.yaml (Full Schema Access, status: {perm.get('status', 'active')})"
                 )
+
+            # Case B: Table level matching
+            if request.access_scope == "table":
+                existing_tables = perm.get("tables", [])
+                if not request.tables or set(request.tables).issubset(set(existing_tables)):
+                    return AccessCheckResult(
+                        access_exists=True,
+                        matching_permission=perm,
+                        message=f"Table access already exists for {request.consumer} in {request.provider}.yaml (status: {perm.get('status', 'active')})"
+                    )
 
         return AccessCheckResult(
             access_exists=False,
