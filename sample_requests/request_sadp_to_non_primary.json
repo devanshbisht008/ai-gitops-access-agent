@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-SADP-3002",
+  "consumer": "SADP-Sales-Analytics",
+  "provider": "SADP-Marketing-Metrics",
+  "source_environment": "dev",
+  "target_environment": "dev",
+  "access_scope": "schema",
+  "requested_by": "sadp.user@example.com",
+  "business_justification": "Testing invalid SADP to non-primary SADP access."
+}
