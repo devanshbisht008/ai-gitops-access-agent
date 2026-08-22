@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-SADP-3001",
+  "consumer": "SADP-Sales-Analytics",
+  "provider": "sadp-gops-addit-primary",
+  "source_environment": "dev",
+  "target_environment": "dev",
+  "access_scope": "schema",
+  "requested_by": "sadp.user@example.com",
+  "business_justification": "Cross-DP access from SADP to primary SADP data product."
+}
