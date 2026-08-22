@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-XENV-4001",
+  "consumer": "DS-TDA-Governance",
+  "provider": "CADP-Customer-Insights",
+  "source_environment": "prod",
+  "target_environment": "dev",
+  "access_scope": "schema",
+  "requested_by": "user@example.com",
+  "business_justification": "Testing invalid Prod to Dev cross-DP access."
+}
