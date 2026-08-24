@@ -45,8 +45,15 @@ class RequestNormalizer:
         
         access_type = f"{source_env}_to_{target_env}"
         
-        # Clean tables list
+        # Clean tables list (support comma-separated string or list)
         tables = [t.strip() for t in request.tables if t and t.strip()] if request.tables else []
+
+        # Enforce Rule: If table names are specified (1 or more), access_scope is 'table'.
+        # If no table access is specified, default to full schema access ('schema').
+        if tables:
+            access_scope = "table"
+        else:
+            access_scope = "schema"
         
         # ML use case detection from flag or justification
         justification = request.business_justification.strip() if request.business_justification else ""
