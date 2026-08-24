@@ -66,7 +66,7 @@ class YAMLAccessChecker:
             # Case B: Table level matching
             if request.access_scope == "table":
                 existing_tables = perm.get("tables", [])
-                if not request.tables or set(request.tables).issubset(set(existing_tables)):
+                if request.tables and set(request.tables).issubset(set(existing_tables)):
                     return AccessCheckResult(
                         access_exists=True,
                         matching_permission=perm,
