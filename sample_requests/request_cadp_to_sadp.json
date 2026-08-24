@@ -1,0 +1,10 @@
+{
+  "request_id": "REQ-CADP-1001",
+  "consumer": "CADP-Customer-Insights",
+  "provider": "SADP-Sales-Analytics",
+  "source_environment": "dev",
+  "target_environment": "dev",
+  "access_scope": "schema",
+  "requested_by": "cadp.analyst@company.com",
+  "business_justification": "Testing CADP to SADP entitlement violation rule."
+}
