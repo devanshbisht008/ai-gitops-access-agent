@@ -370,13 +370,14 @@ with tab1:
             
             if submitted:
                 tables_list = [t.strip() for t in tables_input.split(",") if t.strip()] if tables_input else []
+                computed_scope = "table" if tables_list else "schema"
                 request_dict = {
                     "request_id": req_id,
                     "consumer": consumer,
                     "provider": provider,
                     "source_environment": source_env,
                     "target_environment": target_env,
-                    "access_scope": access_scope,
+                    "access_scope": computed_scope,
                     "tables": tables_list,
                     "is_ml_use_case": is_ml_flag,
                     "requested_by": requested_by,
