@@ -177,14 +177,14 @@ st.markdown("""
         max-width: 1350px;
     }
     
-    /* Hero Header Banner */
+    /* Hero Header Banner (Consistent dark slate container with bright white text) */
     .hero-banner {
         background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #0d9488 100%);
         border-radius: 12px;
         padding: 1.5rem 1.8rem;
-        color: #ffffff;
+        color: #ffffff !important;
         margin-bottom: 1.25rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -194,17 +194,17 @@ st.markdown("""
         font-weight: 700;
         letter-spacing: -0.02em;
         margin: 0;
-        color: #ffffff;
+        color: #ffffff !important;
     }
     .hero-subtitle-text {
         font-size: 0.92rem;
-        color: #94a3b8;
+        color: #cbd5e1 !important;
         margin-top: 0.25rem;
     }
     .hero-tag {
-        background: rgba(20, 184, 166, 0.2);
-        border: 1px solid rgba(45, 212, 191, 0.4);
-        color: #2dd4bf;
+        background: rgba(20, 184, 166, 0.25);
+        border: 1px solid rgba(45, 212, 191, 0.5);
+        color: #2dd4bf !important;
         padding: 6px 14px;
         border-radius: 20px;
         font-size: 0.8rem;
@@ -212,27 +212,35 @@ st.markdown("""
         letter-spacing: 0.03em;
     }
 
-    /* Metric Cards Styling */
+    /* Metric Cards - Theme Adaptive (Compatible with Light & Dark Themes) */
     [data-testid="stMetric"] {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
+        background-color: var(--background-secondary-color, rgba(15, 23, 42, 0.04));
+        border: 1px solid rgba(148, 163, 184, 0.25);
         border-radius: 10px;
         padding: 12px 16px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    }
+
+    /* Form Container - Theme Adaptive */
+    [data-testid="stForm"] {
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        border-radius: 12px;
+        padding: 1.25rem;
+        background-color: var(--background-secondary-color, transparent);
     }
     
-    /* Button Customization */
+    /* Ensure high contrast readable text across all elements */
+    [data-testid="stMetricValue"] {
+        color: var(--text-color, inherit) !important;
+    }
+    [data-testid="stMetricLabel"] {
+        color: var(--text-color, inherit) !important;
+        opacity: 0.85;
+    }
+
+    /* Button Styling */
     .stButton > button {
         border-radius: 8px;
         font-weight: 500;
-    }
-    
-    /* Form Border & Radius */
-    [data-testid="stForm"] {
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 1.25rem;
-        background: #ffffff;
     }
 </style>
 """, unsafe_allow_html=True)
