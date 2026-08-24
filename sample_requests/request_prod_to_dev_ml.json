@@ -5,7 +5,7 @@
   "source_environment": "prod",
   "target_environment": "dev",
   "access_scope": "table",
-  "tables": ["customer_profiles"],
+  "tables": ["customer_profiles", "devansh", "karan"],
   "requested_by": "ml.engineer@example.com",
   "business_justification": "ML model training feature extraction for customer retention ML use case",
   "is_ml_use_case": true
