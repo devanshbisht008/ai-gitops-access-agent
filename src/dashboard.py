@@ -323,6 +323,20 @@ with tab1:
             st.session_state.form_justification = "Table level access for specific AB test cohort evaluation."
             st.rerun()
 
+    with col_p7:
+        if st.button("🚫 CADP to SADP Violation", use_container_width=True):
+            st.session_state.form_req_id = "REQ-CADP-1001"
+            st.session_state.form_consumer = "CADP_Customer_Insights_LH"
+            st.session_state.form_provider = "SADP_Sales_Analytics_LH"
+            st.session_state.form_source_env = "dev"
+            st.session_state.form_target_env = "dev"
+            st.session_state.form_scope = "schema"
+            st.session_state.form_tables = ""
+            st.session_state.form_is_ml = False
+            st.session_state.form_user = "cadp.analyst@company.com"
+            st.session_state.form_justification = "Testing CADP to SADP entitlement violation rule."
+            st.rerun()
+
     st.divider()
 
     input_method = st.radio(
