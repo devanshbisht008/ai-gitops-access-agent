@@ -136,3 +136,61 @@ permissions: []
     success_m, _, msg_m = modifier.add_permission(req_missing_table)
     assert success_m is False
     assert "Table verification failed" in msg_m
+
+def test_multiple_table_inputs_and_no_table_fallback(tmp_path):
+    repo_dir = tmp_path / "sample_repo"
+    dp_dir = repo_dir / "data_products"
+    dp_dir.mkdir(parents=True)
+
+    yaml_file = dp_dir / "CADP-Customer-Insights.yaml"
+    yaml_file.write_text("""
+data_product: CADP-Customer-Insights
+owner: sample.owner@example.com
+permissions: []
+""", encoding="utf-8")
+
+    modifier = YAMLModifier(repo_dir=str(repo_dir))
+
+    # Test A: Multiple tables passed
+    req_multi = NormalizedRequest(
+        request_id="REQ-MULTI-01",
+        consumer="DS-Digital-AB-Testing-Evaluation",
+        provider="CADP-Customer-Insights",
+        source_environment="dev",
+        target_environment="dev",
+        access_type="dev_to_dev",
+        access_scope="table",
+        tables=["table_a", "table_b", "table_c"],
+        requested_by="user@example.com",
+        business_justification="Multiple table access"
+    )
+
+    success_multi, file_path_multi, _ = modifier.add_permission(req_multi)
+    assert success_multi is True
+    data_multi = load_yaml_file(file_path_multi)
+    perm_multi = data_multi["permissions"][0]
+    assert perm_multi["full_schema_access"] is False
+    assert perm_multi["access_scope"] == "table"
+    assert perm_multi["tables"] == ["table_a", "table_b", "table_c"]
+
+    # Test B: No tables passed -> full_schema_access = True
+    req_no_table = NormalizedRequest(
+        request_id="REQ-NONE-01",
+        consumer="DS-TDA-Governance",
+        provider="CADP-Customer-Insights",
+        source_environment="dev",
+        target_environment="dev",
+        access_type="dev_to_dev",
+        access_scope="schema",
+        tables=[],
+        requested_by="user@example.com",
+        business_justification="No table specified"
+    )
+
+    success_none, file_path_none, _ = modifier.add_permission(req_no_table)
+    assert success_none is True
+    data_none = load_yaml_file(file_path_none)
+    perm_none = data_none["permissions"][1]
+    assert perm_none["full_schema_access"] is True
+    assert perm_none["access_scope"] == "schema"
+    assert "tables" not in perm_none
