@@ -167,9 +167,88 @@ def clean_pr_body(body: str) -> str:
             body = body.split(header)[0]
     return body.strip()
 
-# Header
-st.title("⚙️ AI-GitOps Access Provisioning Dashboard")
+# --- Custom CSS Styling ---
+st.markdown("""
+<style>
+    /* Main Layout Polish */
+    .block-container {
+        padding-top: 1.25rem;
+        padding-bottom: 2rem;
+        max-width: 1350px;
+    }
+    
+    /* Hero Header Banner */
+    .hero-banner {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #0d9488 100%);
+        border-radius: 12px;
+        padding: 1.5rem 1.8rem;
+        color: #ffffff;
+        margin-bottom: 1.25rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .hero-title-text {
+        font-size: 1.8rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0;
+        color: #ffffff;
+    }
+    .hero-subtitle-text {
+        font-size: 0.92rem;
+        color: #94a3b8;
+        margin-top: 0.25rem;
+    }
+    .hero-tag {
+        background: rgba(20, 184, 166, 0.2);
+        border: 1px solid rgba(45, 212, 191, 0.4);
+        color: #2dd4bf;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+    }
 
+    /* Metric Cards Styling */
+    [data-testid="stMetric"] {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px 16px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    }
+    
+    /* Button Customization */
+    .stButton > button {
+        border-radius: 8px;
+        font-weight: 500;
+    }
+    
+    /* Form Border & Radius */
+    [data-testid="stForm"] {
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.25rem;
+        background: #ffffff;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Render Hero Banner
+st.markdown("""
+<div class="hero-banner">
+    <div>
+        <div class="hero-title-text">⚙️ AI-GitOps Access Provisioning Agent</div>
+        <div class="hero-subtitle-text">Automated Entitlement Validation, Cross-Environment Policy Rules & GitOps Infrastructure Operations</div>
+    </div>
+    <div>
+        <span class="hero-tag">ENTERPRISE GITOPS</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 # Sidebar Configuration & Status
 with st.sidebar:
@@ -193,14 +272,14 @@ with st.sidebar:
 
     st.divider()
     st.markdown("### 📊 Repository Details")
-    st.caption(f"Repository: **{GITHUB_OWNER}/{GITHUB_REPO}**")
+    st.caption(f"Repository: **`{GITHUB_OWNER}/{GITHUB_REPO}`**")
     st.caption(f"Target Branch: **`{BASE_BRANCH}`**")
     
     st.divider()
     if st.button("🔄 Refresh Dashboard", use_container_width=True):
         st.rerun()
 
-st.caption(f"Connected Repository: **{GITHUB_OWNER}/{GITHUB_REPO}** | Target Branch: **`{BASE_BRANCH}`** | Mode: **`{mode_option.upper()}`**")
+st.caption(f"Connected Repository: **`{GITHUB_OWNER}/{GITHUB_REPO}`** | Target Branch: **`{BASE_BRANCH}`** | Mode: **`{mode_option.upper()}`**")
 
 # Main Navigation Tabs
 tab1, tab2, tab3 = st.tabs([
@@ -211,8 +290,8 @@ tab1, tab2, tab3 = st.tabs([
 
 # --- TAB 1: SUBMIT & VALIDATE ACCESS REQUEST FORM ---
 with tab1:
-    st.subheader("➕ Submit Access Request (Form & Validation)")
-    st.write("Submit a new cross-data product access request using the structured form, natural language text, or raw JSON input.")
+    st.subheader("➕ Submit Access Request")
+    st.caption("Submit a cross-data product access request via structured form or raw JSON input. All policy validation and entitlement rules are evaluated in real time.")
 
     # Preset selection buttons for quick demo filling
     st.markdown("#### ⚡ Quick Presets / Demo Fillers")
