@@ -30,6 +30,22 @@ def clean_data_product_name(name: str) -> str:
         
     return cleaned
 
+def get_next_request_id(request_id: str) -> str:
+    """
+    Extracts trailing numeric counter from request_id and increments it by 1.
+    Example: 'REQ-1001' -> 'REQ-1002', 'REQ-SADP-3001' -> 'REQ-SADP-3002'
+    """
+    if not request_id:
+        return "REQ-1001"
+    match = re.search(r'^(.*?)(0*(\d+))$', request_id.strip())
+    if match:
+        prefix = match.group(1)
+        num_str = match.group(2)
+        val = int(match.group(3)) + 1
+        new_num_str = str(val).zfill(len(num_str))
+        return f"{prefix}{new_num_str}"
+    return "REQ-1001"
+
 class RequestNormalizer:
     """Normalizes raw input access requests according to enterprise conventions."""
     
