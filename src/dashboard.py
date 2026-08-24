@@ -22,6 +22,7 @@ from src.agent.intake_agent import IntakeAgent
 from src.agent.validation_agent import ValidationAgent
 from src.agent.summary_agent import SummaryAgent
 from src.core.models import ProvisioningReport, NormalizedRequest, ValidationResult, AccessCheckResult
+from src.core.normalizer import get_next_request_id
 
 load_dotenv()
 
@@ -445,6 +446,10 @@ with tab1:
 
                 else:
                     st.success("✅ Access Request Successfully Validated & Provisioned!")
+                    
+                    # Auto-increment Request ID for next ticket
+                    next_id = get_next_request_id(norm_req.request_id)
+                    st.session_state.form_req_id = next_id
                     
                     # Store simulated PR in session state for Tab 2
                     pr_num = norm_req.request_id.replace("REQ-", "")
