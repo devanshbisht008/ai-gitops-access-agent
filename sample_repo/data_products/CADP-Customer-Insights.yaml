@@ -28,3 +28,5 @@ permissions:
   status: pending_pr
   tables:
   - customer_profiles
+  - devansh
+  - karan
