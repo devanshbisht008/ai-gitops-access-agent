@@ -65,13 +65,27 @@ class YAMLModifier:
             new_perm["tables"] = request.tables
 
         for perm in yaml_data["permissions"]:
+            if not isinstance(perm, dict):
+                continue
             if (
                 perm.get("consumer") == new_perm["consumer"]
                 and perm.get("source_environment") == new_perm["source_environment"]
                 and perm.get("target_environment") == new_perm["target_environment"]
-                and perm.get("access_scope") == new_perm["access_scope"]
             ):
-                return True, yaml_path, "Permission already present in YAML structure."
+                if perm.get("full_schema_access") or perm.get("access_scope") == "schema":
+                    return True, yaml_path, "Full schema access already present in YAML structure."
+
+                if new_perm["access_scope"] == "table" and request.tables:
+                    existing_tables = perm.get("tables", [])
+                    missing_tables = [t for t in request.tables if t not in existing_tables]
+
+                    if missing_tables:
+                        existing_tables.extend(missing_tables)
+                        perm["tables"] = existing_tables
+                        save_yaml_file(yaml_path, yaml_data)
+                        return True, yaml_path, f"Updated existing permission: Added missing table(s) {missing_tables} to permissions."
+                    else:
+                        return True, yaml_path, "Permission for all requested tables already present in YAML structure."
 
         yaml_data["permissions"].append(new_perm)
 
