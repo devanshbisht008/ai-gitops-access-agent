@@ -51,13 +51,13 @@ class YAMLModifier:
                     )
 
         # Build new permission object with enterprise keywords
-        is_full_schema = (request.access_scope == "schema")
+        is_full_schema = (not request.tables) or (request.access_scope == "schema")
         new_perm = {
             "consumer": request.consumer,
             "source_environment": request.source_environment,
             "target_environment": request.target_environment,
             "access_type": request.access_type,
-            "access_scope": request.access_scope,
+            "access_scope": "schema" if is_full_schema else "table",
             "full_schema_access": is_full_schema,
             "status": "pending_pr"
         }
