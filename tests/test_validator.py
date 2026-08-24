@@ -99,6 +99,22 @@ def test_sadp_to_cadp_rejected():
     assert res.is_valid is False
     assert any("SADP" in err and "CADP" in err and "access is not allowed" in err for err in res.errors)
 
+def test_cadp_to_sadp_rejected():
+    req = NormalizedRequest(
+        request_id="REQ-CADP-001",
+        consumer="CADP-Customer-Insights",
+        provider="SADP-Sales-Analytics",
+        source_environment="dev",
+        target_environment="dev",
+        access_type="dev_to_dev",
+        access_scope="schema",
+        requested_by="user@example.com",
+        business_justification="Access SADP from CADP"
+    )
+    res = RequestValidator.validate(req)
+    assert res.is_valid is False
+    assert any("CADP" in err and "SADP" in err and "access is not allowed" in err for err in res.errors)
+
 def test_prod_to_dev_cross_dp_rejected():
     req = NormalizedRequest(
         request_id="REQ-XENV-001",
