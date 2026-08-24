@@ -104,6 +104,12 @@ class RequestValidator:
                     f"Access violation: SADP ({request.consumer}) to {provider_type} ({request.provider}) "
                     f"access is not allowed."
                 )
+        elif consumer_type == "CADP":
+            if provider_type == "SADP":
+                errors.append(
+                    f"Access violation: CADP ({request.consumer}) to SADP ({request.provider}) "
+                    f"access is not allowed."
+                )
 
         # Rule 9: Environment Flow Isolation Rules (Dev-Dev, Dev-Prod, Prod-Prod, Prod-Dev)
         if request.source_environment == "prod" and request.target_environment == "dev":
