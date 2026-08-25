@@ -1,0 +1,6 @@
+data_product: SADP-Sales-Analytics
+owner: sales.analytics@example.com
+available_tables:
+  - daily_store_sales
+  - ecom_conversions
+permissions: []
