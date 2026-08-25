@@ -1,0 +1,14 @@
+data_product: CADP-Finance-Master
+owner: finance.master@example.com
+available_tables:
+- ledger_entries
+- revenue_by_region
+- audit_journal
+permissions:
+- consumer: DS-TDA-Governance
+  source_environment: dev
+  target_environment: prod
+  access_type: dev_to_prod
+  access_scope: schema
+  full_schema_access: true
+  status: pending_pr
