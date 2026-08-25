@@ -1,0 +1,6 @@
+data_product: SADP-Marketing-Metrics
+owner: marketing.metrics@example.com
+available_tables:
+  - campaign_impressions
+  - click_through_rates
+permissions: []
