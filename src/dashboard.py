@@ -22,7 +22,20 @@ from src.agent.intake_agent import IntakeAgent
 from src.agent.validation_agent import ValidationAgent
 from src.agent.summary_agent import SummaryAgent
 from src.core.models import ProvisioningReport, NormalizedRequest, ValidationResult, AccessCheckResult
-from src.core.normalizer import get_next_request_id
+from src.core.normalizer import get_next_request_id, clean_data_product_name
+
+ENTERPRISE_DATA_PRODUCTS = [
+    "CADP-Customer-Insights",
+    "CADP-Digital-Content",
+    "CADP-Supply-Chain-Global",
+    "CADP-Finance-Master",
+    "SADP-Sales-Analytics",
+    "SADP-Marketing-Metrics",
+    "sadp-gops-addit-primary",
+    "sadp-logistics-core-primary",
+    "DS-Digital-AB-Testing-Evaluation",
+    "DS-TDA-Governance"
+]
 
 load_dotenv()
 
@@ -308,9 +321,9 @@ with tab1:
     if "form_req_id" not in st.session_state:
         st.session_state.form_req_id = "REQ-1001"
     if "form_consumer" not in st.session_state:
-        st.session_state.form_consumer = "DS_TDA_Governance_LH"
+        st.session_state.form_consumer = "DS-TDA-Governance"
     if "form_provider" not in st.session_state:
-        st.session_state.form_provider = "DS_Digital_AB_Testing_Evaluation_LH"
+        st.session_state.form_provider = "DS-Digital-AB-Testing-Evaluation"
     if "form_source_env" not in st.session_state:
         st.session_state.form_source_env = "dev"
     if "form_target_env" not in st.session_state:
@@ -329,7 +342,7 @@ with tab1:
     with col_p1:
         if st.button("🎯 Valid SADP to Primary", use_container_width=True):
             st.session_state.form_req_id = "REQ-SADP-1001"
-            st.session_state.form_consumer = "SADP_Sales_Analytics_LH"
+            st.session_state.form_consumer = "SADP-Sales-Analytics"
             st.session_state.form_provider = "sadp-gops-addit-primary"
             st.session_state.form_source_env = "dev"
             st.session_state.form_target_env = "dev"
@@ -343,8 +356,8 @@ with tab1:
     with col_p2:
         if st.button("🚫 SADP to Non-Primary", use_container_width=True):
             st.session_state.form_req_id = "REQ-SADP-1002"
-            st.session_state.form_consumer = "SADP_Sales_Analytics_LH"
-            st.session_state.form_provider = "SADP_Marketing_Metrics_LH"
+            st.session_state.form_consumer = "SADP-Sales-Analytics"
+            st.session_state.form_provider = "SADP-Marketing-Metrics"
             st.session_state.form_source_env = "dev"
             st.session_state.form_target_env = "dev"
             st.session_state.form_scope = "schema"
@@ -357,8 +370,8 @@ with tab1:
     with col_p3:
         if st.button("🚫 SADP to CADP Violation", use_container_width=True):
             st.session_state.form_req_id = "REQ-SADP-1003"
-            st.session_state.form_consumer = "SADP_Sales_Analytics_LH"
-            st.session_state.form_provider = "CADP_Customer_Insights_LH"
+            st.session_state.form_consumer = "SADP-Sales-Analytics"
+            st.session_state.form_provider = "CADP-Customer-Insights"
             st.session_state.form_source_env = "dev"
             st.session_state.form_target_env = "dev"
             st.session_state.form_scope = "schema"
@@ -371,8 +384,8 @@ with tab1:
     with col_p4:
         if st.button("🚫 Cross-DP Prod-Dev Error", use_container_width=True):
             st.session_state.form_req_id = "REQ-XENV-1001"
-            st.session_state.form_consumer = "DS_TDA_Governance_LH"
-            st.session_state.form_provider = "CADP_Customer_Insights_LH"
+            st.session_state.form_consumer = "DS-TDA-Governance"
+            st.session_state.form_provider = "CADP-Customer-Insights"
             st.session_state.form_source_env = "prod"
             st.session_state.form_target_env = "dev"
             st.session_state.form_scope = "schema"
@@ -386,8 +399,8 @@ with tab1:
     with col_p5:
         if st.button("🤖 Self Prod-Dev ML Case", use_container_width=True):
             st.session_state.form_req_id = "REQ-ML-1001"
-            st.session_state.form_consumer = "CADP_Customer_Insights_LH"
-            st.session_state.form_provider = "CADP_Customer_Insights_LH"
+            st.session_state.form_consumer = "CADP-Customer-Insights"
+            st.session_state.form_provider = "CADP-Customer-Insights"
             st.session_state.form_source_env = "prod"
             st.session_state.form_target_env = "dev"
             st.session_state.form_scope = "table"
@@ -400,8 +413,8 @@ with tab1:
     with col_p6:
         if st.button("🔍 Specific Table Scope", use_container_width=True):
             st.session_state.form_req_id = "REQ-TBL-1001"
-            st.session_state.form_consumer = "DS_Digital_AB_Testing_Evaluation_LH"
-            st.session_state.form_provider = "CADP_Customer_Insights_LH"
+            st.session_state.form_consumer = "DS-Digital-AB-Testing-Evaluation"
+            st.session_state.form_provider = "CADP-Customer-Insights"
             st.session_state.form_source_env = "dev"
             st.session_state.form_target_env = "prod"
             st.session_state.form_scope = "table"
@@ -414,8 +427,8 @@ with tab1:
     with col_p7:
         if st.button("🚫 CADP to SADP Violation", use_container_width=True):
             st.session_state.form_req_id = "REQ-CADP-1001"
-            st.session_state.form_consumer = "CADP_Customer_Insights_LH"
-            st.session_state.form_provider = "SADP_Sales_Analytics_LH"
+            st.session_state.form_consumer = "CADP-Customer-Insights"
+            st.session_state.form_provider = "SADP-Sales-Analytics"
             st.session_state.form_source_env = "dev"
             st.session_state.form_target_env = "dev"
             st.session_state.form_scope = "schema"
@@ -440,8 +453,35 @@ with tab1:
             col1, col2 = st.columns(2)
             with col1:
                 req_id = st.text_input("Request ID", value=st.session_state.form_req_id, key="input_req_id")
-                consumer = st.text_input("Consumer Data Product", value=st.session_state.form_consumer, key="input_consumer", help="Supports DS-*, CADP-*, SADP-* prefixes")
-                provider = st.text_input("Provider Data Product", value=st.session_state.form_provider, key="input_provider", help="Supports DS-*, CADP-*, SADP-* prefixes")
+                
+                # Consumer DP Dropdown with type-ahead search
+                c_clean = clean_data_product_name(st.session_state.form_consumer)
+                c_opts = ENTERPRISE_DATA_PRODUCTS.copy()
+                if c_clean and c_clean not in c_opts:
+                    c_opts.insert(0, c_clean)
+                c_idx = c_opts.index(c_clean) if c_clean in c_opts else 0
+                consumer = st.selectbox(
+                    "Consumer Data Product (Requester)",
+                    options=c_opts,
+                    index=c_idx,
+                    key="input_consumer_sel",
+                    help="Type to search enterprise Consumer DPs (DS-*, CADP-*, SADP-*)"
+                )
+
+                # Provider DP Dropdown with type-ahead search
+                p_clean = clean_data_product_name(st.session_state.form_provider)
+                p_opts = ENTERPRISE_DATA_PRODUCTS.copy()
+                if p_clean and p_clean not in p_opts:
+                    p_opts.insert(0, p_clean)
+                p_idx = p_opts.index(p_clean) if p_clean in p_opts else 0
+                provider = st.selectbox(
+                    "Provider Data Product (Data Owner)",
+                    options=p_opts,
+                    index=p_idx,
+                    key="input_provider_sel",
+                    help="Type to search enterprise Provider DPs (DS-*, CADP-*, SADP-*)"
+                )
+
                 requested_by = st.text_input("Requested By (Email)", value=st.session_state.form_user, key="input_user")
                 is_ml_flag = st.checkbox("Is ML Use Case? (Required for Self Prod-to-Dev access)", value=st.session_state.form_is_ml, key="input_is_ml")
             
