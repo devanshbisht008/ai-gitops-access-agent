@@ -1,0 +1,7 @@
+data_product: CADP-Finance-Master
+owner: finance.master@example.com
+available_tables:
+  - ledger_entries
+  - revenue_by_region
+  - audit_journal
+permissions: []
