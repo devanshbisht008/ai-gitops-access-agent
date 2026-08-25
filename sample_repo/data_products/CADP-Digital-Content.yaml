@@ -1,0 +1,7 @@
+data_product: CADP-Digital-Content
+owner: digital.content@example.com
+available_tables:
+  - media_assets
+  - campaign_creatives
+  - brand_guidelines
+permissions: []
