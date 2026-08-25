@@ -1,0 +1,13 @@
+data_product: SADP-Sales-Analytics
+owner: sales.analytics@example.com
+available_tables:
+- daily_store_sales
+- ecom_conversions
+permissions:
+- consumer: DS-TDA-Governance
+  source_environment: dev
+  target_environment: prod
+  access_type: dev_to_prod
+  access_scope: schema
+  full_schema_access: true
+  status: pending_pr
