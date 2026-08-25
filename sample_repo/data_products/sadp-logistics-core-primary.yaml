@@ -1,0 +1,6 @@
+data_product: sadp-logistics-core-primary
+owner: logistics.core@example.com
+available_tables:
+  - primary_fleet_tracking
+  - warehouse_dispatch
+permissions: []
