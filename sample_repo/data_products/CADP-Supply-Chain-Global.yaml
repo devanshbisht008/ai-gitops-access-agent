@@ -1,0 +1,7 @@
+data_product: CADP-Supply-Chain-Global
+owner: supply.chain@example.com
+available_tables:
+  - inventory_snapshots
+  - warehouse_shipments
+  - supplier_lead_times
+permissions: []
