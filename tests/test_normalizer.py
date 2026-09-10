@@ -38,6 +38,8 @@ def test_request_normalizer_full_request():
 
 def test_get_next_request_id_auto_increment():
     from src.core.normalizer import get_next_request_id
+    assert get_next_request_id("1001") == "1002"
+    assert get_next_request_id("1002") == "1003"
     assert get_next_request_id("REQ-1001") == "REQ-1002"
     assert get_next_request_id("REQ-1009") == "REQ-1010"
     assert get_next_request_id("REQ-SADP-3001") == "REQ-SADP-3002"
