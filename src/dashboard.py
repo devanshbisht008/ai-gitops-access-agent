@@ -23,6 +23,7 @@ from src.agent.validation_agent import ValidationAgent
 from src.agent.summary_agent import SummaryAgent
 from src.core.models import ProvisioningReport, NormalizedRequest, ValidationResult, AccessCheckResult
 from src.core.normalizer import get_next_request_id, clean_data_product_name
+from src.core.ticket_store import TicketStoreRepository
 
 ENTERPRISE_DATA_PRODUCTS = [
     "CADP-Customer-Insights",
@@ -303,10 +304,11 @@ with st.sidebar:
 st.caption(f"Connected Repository: **`{GITHUB_OWNER}/{GITHUB_REPO}`** | Target Branch: **`{BASE_BRANCH}`** | Mode: **`{mode_option.upper()}`**")
 
 # Main Navigation Tabs
-tab1, tab2, tab3 = st.tabs([
+tab1, tab2, tab3, tab4 = st.tabs([
     "➕ Submit & Validate Access Request",
     "📋 Pending Operational Reviews",
-    "🚀 Active Deployment Tracking"
+    "🚀 Active Deployment Tracking",
+    "🗄️ Ticket Database Table"
 ])
 
 # --- TAB 1: SUBMIT & VALIDATE ACCESS REQUEST FORM ---
@@ -319,7 +321,8 @@ with tab1:
     col_p1, col_p2, col_p3, col_p4 = st.columns(4)
 
     if "form_req_id" not in st.session_state:
-        st.session_state.form_req_id = "REQ-1001"
+        latest_id = TicketStoreRepository().get_latest_ticket_id()
+        st.session_state.form_req_id = get_next_request_id(latest_id) if latest_id else "REQ-1001"
     if "form_consumer" not in st.session_state:
         st.session_state.form_consumer = "DS-TDA-Governance"
     if "form_provider" not in st.session_state:
@@ -341,7 +344,6 @@ with tab1:
 
     with col_p1:
         if st.button("🎯 Valid SADP to Primary", use_container_width=True):
-            st.session_state.form_req_id = "REQ-SADP-1001"
             st.session_state.form_consumer = "SADP-Sales-Analytics"
             st.session_state.form_provider = "sadp-gops-addit-primary"
             st.session_state.form_source_env = "dev"
@@ -355,7 +357,6 @@ with tab1:
 
     with col_p2:
         if st.button("🚫 SADP to Non-Primary", use_container_width=True):
-            st.session_state.form_req_id = "REQ-SADP-1002"
             st.session_state.form_consumer = "SADP-Sales-Analytics"
             st.session_state.form_provider = "SADP-Marketing-Metrics"
             st.session_state.form_source_env = "dev"
@@ -369,7 +370,6 @@ with tab1:
 
     with col_p3:
         if st.button("🚫 SADP to CADP Violation", use_container_width=True):
-            st.session_state.form_req_id = "REQ-SADP-1003"
             st.session_state.form_consumer = "SADP-Sales-Analytics"
             st.session_state.form_provider = "CADP-Customer-Insights"
             st.session_state.form_source_env = "dev"
@@ -383,7 +383,6 @@ with tab1:
 
     with col_p4:
         if st.button("🚫 Cross-DP Prod-Dev Error", use_container_width=True):
-            st.session_state.form_req_id = "REQ-XENV-1001"
             st.session_state.form_consumer = "DS-TDA-Governance"
             st.session_state.form_provider = "CADP-Customer-Insights"
             st.session_state.form_source_env = "prod"
@@ -398,7 +397,6 @@ with tab1:
     col_p5, col_p6, col_p7, col_p8 = st.columns(4)
     with col_p5:
         if st.button("🤖 Self Prod-Dev ML Case", use_container_width=True):
-            st.session_state.form_req_id = "REQ-ML-1001"
             st.session_state.form_consumer = "CADP-Customer-Insights"
             st.session_state.form_provider = "CADP-Customer-Insights"
             st.session_state.form_source_env = "prod"
@@ -412,7 +410,6 @@ with tab1:
 
     with col_p6:
         if st.button("🔍 Specific Table Scope", use_container_width=True):
-            st.session_state.form_req_id = "REQ-TBL-1001"
             st.session_state.form_consumer = "DS-Digital-AB-Testing-Evaluation"
             st.session_state.form_provider = "CADP-Customer-Insights"
             st.session_state.form_source_env = "dev"
@@ -426,7 +423,6 @@ with tab1:
 
     with col_p7:
         if st.button("🚫 CADP to SADP Violation", use_container_width=True):
-            st.session_state.form_req_id = "REQ-CADP-1001"
             st.session_state.form_consumer = "CADP-Customer-Insights"
             st.session_state.form_provider = "SADP-Sales-Analytics"
             st.session_state.form_source_env = "dev"
@@ -452,7 +448,13 @@ with tab1:
         with st.form("access_request_form"):
             col1, col2 = st.columns(2)
             with col1:
-                req_id = st.text_input("Request ID", value=st.session_state.form_req_id, key="input_req_id")
+                req_id = st.text_input(
+                    "Request ID (Auto-Generated)",
+                    value=st.session_state.form_req_id,
+                    disabled=True,
+                    key="input_req_id",
+                    help="Ticket ID is automatically generated and incremented by the system. Manual editing is disabled."
+                )
                 
                 # Consumer DP Dropdown with type-ahead search
                 c_clean = clean_data_product_name(st.session_state.form_consumer)
@@ -544,6 +546,9 @@ with tab1:
                 val_result = report.validation_result
                 access_check = report.existing_access_result
 
+                # Auto-increment Request ID for next ticket regardless of validation outcome
+                st.session_state.form_req_id = get_next_request_id(norm_req.request_id)
+
                 # 1. Validation Banner
                 if not val_result.is_valid:
                     st.error("❌ Request Validation Failed - Policy Violations Detected")
@@ -573,10 +578,6 @@ with tab1:
 
                 else:
                     st.success("✅ Access Request Successfully Validated & Provisioned!")
-                    
-                    # Auto-increment Request ID for next ticket
-                    next_id = get_next_request_id(norm_req.request_id)
-                    st.session_state.form_req_id = next_id
                     
                     # Store simulated PR in session state for Tab 2
                     pr_num = norm_req.request_id.replace("REQ-", "")
@@ -802,4 +803,58 @@ with tab3:
 [SUCCESS] Policy ready for Data Product Owner review and merge execution."""
 
     st.code(gitops_logs, language="text")
+
+# --- TAB 4: TICKET DATABASE REPOSITORY TABLE ---
+with tab4:
+    st.subheader("🗄️ Ticket Request Database Repository Table")
+    st.caption("All access requests (provisioned, rejected, or active) are persisted as unique rows in the SQLite ticket database table (`ticket_requests`).")
+
+    ticket_store = TicketStoreRepository()
+    all_tickets = ticket_store.get_all_tickets()
+
+    if not all_tickets:
+        st.info("ℹ️ No ticket records stored in database yet. Submit a new access request in Tab 1 to record rows.")
+    else:
+        # Display summary metrics
+        m1, m2, m3, m4 = st.columns(4)
+        total_cnt = len(all_tickets)
+        prov_cnt = sum(1 for t in all_tickets if t.get("status") == "PROVISIONED")
+        rej_cnt = sum(1 for t in all_tickets if t.get("status") == "REJECTED")
+        exist_cnt = sum(1 for t in all_tickets if t.get("status") == "EXISTS_ACTIVE")
+
+        m1.metric("Total Unique Ticket Rows", total_cnt)
+        m2.metric("Provisioned (PR Open)", prov_cnt)
+        m3.metric("Rejected (Policy Failure)", rej_cnt)
+        m4.metric("Existing Active Access", exist_cnt)
+
+        st.divider()
+
+        # Search filter
+        search_query = st.text_input("🔍 Search Database Rows (by Ticket ID, Consumer, Provider, Requester, Status)", value="", key="search_db_tickets")
+        filtered_tickets = all_tickets
+        if search_query.strip():
+            sq = search_query.strip().lower()
+            filtered_tickets = [
+                t for t in all_tickets
+                if sq in str(t.get("ticket_id", "")).lower()
+                or sq in str(t.get("consumer", "")).lower()
+                or sq in str(t.get("provider", "")).lower()
+                or sq in str(t.get("requested_by", "")).lower()
+                or sq in str(t.get("status", "")).lower()
+            ]
+
+        import pandas as pd
+        df = pd.DataFrame(filtered_tickets)
+
+        # Order columns cleanly
+        col_order = [
+            "ticket_id", "status", "consumer", "provider", "source_environment",
+            "target_environment", "access_type", "access_scope", "requested_by",
+            "is_ml_use_case", "pr_url", "validation_errors", "created_at"
+        ]
+        present_cols = [c for c in col_order if c in df.columns]
+        df = df[present_cols]
+
+        st.dataframe(df, use_container_width=True)
+
 
