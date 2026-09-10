@@ -17,7 +17,7 @@ from src.core.models import ProvisioningReport
 from src.gitops.github_client import GitHubClient
 from src.gitops.branch_manager import BranchManager
 from src.gitops.commit_manager import CommitManager
-from src.gitops.pr_manager import PullRequestManager
+from src.core.ticket_store import TicketStoreRepository
 from src.utils.logger import setup_logger
 
 logger = setup_logger("main")
@@ -37,16 +37,23 @@ def run_pipeline(request_input: str, mode: str = "local", repo_dir: str = "sampl
 
     summary_agent = SummaryAgent()
 
+    def _finish_report(report: ProvisioningReport) -> ProvisioningReport:
+        try:
+            TicketStoreRepository().save_ticket(report)
+        except Exception as e:
+            logger.warning(f"Failed to persist ticket to database: {e}")
+        return report
+
     if not val_result.is_valid:
         logger.warning("Request validation failed.")
-        return ProvisioningReport(
+        return _finish_report(ProvisioningReport(
             request_id=norm_req.request_id,
             normalized_request=norm_req,
             validation_result=val_result,
             existing_access_result=None,
             action_taken={"Status": "Aborted due to validation errors"},
             manual_steps=[]
-        )
+        ))
 
     # 3. Owner Lookup
     owner_lookup = OwnerLookup(mapping_csv_path=os.path.join(os.path.dirname(__file__), "..", "config", "owner_mapping.csv"))
@@ -59,7 +66,7 @@ def run_pipeline(request_input: str, mode: str = "local", repo_dir: str = "sampl
 
     if access_check.access_exists:
         logger.info("Access already exists in YAML configuration. Skipping modification.")
-        return ProvisioningReport(
+        return _finish_report(ProvisioningReport(
             request_id=norm_req.request_id,
             normalized_request=norm_req,
             validation_result=val_result,
@@ -69,7 +76,7 @@ def run_pipeline(request_input: str, mode: str = "local", repo_dir: str = "sampl
                 "Provider File": yaml_checker.get_provider_yaml_path(norm_req.provider)
             },
             manual_steps=["No further action needed. Access already provisioned."]
-        )
+        ))
 
     # 5. Execute GitOps Automation (Feature Branch, YAML Modify, Commit, PR)
     logger.info("Access not found. Executing GitOps automation layer...")
@@ -86,14 +93,14 @@ def run_pipeline(request_input: str, mode: str = "local", repo_dir: str = "sampl
     success, file_path, mod_msg = yaml_modifier.add_permission(norm_req, owner_email)
     if not success:
         logger.error(f"YAML modification failed: {mod_msg}")
-        return ProvisioningReport(
+        return _finish_report(ProvisioningReport(
             request_id=norm_req.request_id,
             normalized_request=norm_req,
             validation_result=val_result,
             existing_access_result=access_check,
             action_taken={"Status": "Failed during YAML modification", "Error": mod_msg},
             manual_steps=[]
-        )
+        ))
 
     # Step C: Commit Changes
     commit_status = commit_mgr.commit_changes(norm_req, file_path, branch_name)
@@ -122,14 +129,14 @@ def run_pipeline(request_input: str, mode: str = "local", repo_dir: str = "sampl
 
     manual_checklist = summary_agent.get_default_manual_steps()
 
-    return ProvisioningReport(
+    return _finish_report(ProvisioningReport(
         request_id=norm_req.request_id,
         normalized_request=norm_req,
         validation_result=val_result,
         existing_access_result=access_check,
         action_taken=actions,
         manual_steps=manual_checklist
-    )
+    ))
 
 def main():
     parser = argparse.ArgumentParser(
